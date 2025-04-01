@@ -23,6 +23,7 @@ export default class CreateProductRequest {
       rules.minLength(1),
       rules.maxLength(10)
     ]).members(schema.string({escape: true, trim: true})),
+    price: schema.number.optional(),
     quantity: schema.number.optional()
   })
 
@@ -38,6 +39,7 @@ export default class CreateProductRequest {
     'photo_gallery.array': 'Photo Gallery must be an array',
     'photo_gallery.minLength': 'At least one item for photo gallery is required',
     'photo_gallery.maxLength': 'Photo Gallery maximum item should be 10',
+    'price.number': 'Price must be a number',
     'quantity.number': 'Quantity must be a number'
   }
 }

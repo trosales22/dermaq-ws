@@ -37,4 +37,8 @@ export default class DateFormatterHelper {
 
     return null
   }
+
+  public static formatTimeTo12Hour(date: string, time: string): string {
+    return moment.tz(`${date} ${time}`, 'YYYY-MM-DD HH:mm', 'Asia/Manila').format('hh:mm A');
+  }
 }

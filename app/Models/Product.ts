@@ -35,6 +35,13 @@ export default class Product extends BaseModel {
   public photoGallery: string
 
   @column({
+    serializeAs: 'price',
+    columnName: 'price',
+    consume: (value: string) => Number(value)
+  })
+  public price: number;
+
+  @column({
     serializeAs: 'quantity',
     columnName: 'quantity',
     consume: (value: string) => Number(value)

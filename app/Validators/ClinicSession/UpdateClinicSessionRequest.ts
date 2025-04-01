@@ -5,7 +5,7 @@ import GeneralConstants from 'App/Constants/GeneralConstants';
 
 export default class UpdateClinicSessionRequest {
   private sessionDateFormat: string = 'yyyy-MM-dd'
-  private startEndTimeFormat: string = 'hh:mm a'
+  private startEndTimeFormat: string = 'HH:mm'
 
   constructor (protected ctx: HttpContextContract) {
   }

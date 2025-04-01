@@ -3,7 +3,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class CreateClinicSessionRequest {
   private sessionDateFormat: string = 'yyyy-MM-dd'
-  private startEndTimeFormat: string = 'hh:mm a'
+  private startEndTimeFormat: string = 'HH:mm'
 
   constructor (protected ctx: HttpContextContract) {
   }

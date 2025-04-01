@@ -11,6 +11,7 @@ import CreateClinicSessionRequest from 'App/Validators/ClinicSession/CreateClini
 import UpdateClinicSessionRequest from 'App/Validators/ClinicSession/UpdateClinicSessionRequest'
 import DeleteClinicSessionRequest from 'App/Validators/ClinicSession/DeleteClinicSessionRequest'
 import GeneralConstants from 'App/Constants/GeneralConstants'
+import Reservation from 'App/Models/Reservation'
 
 export default class ClinicSessionController {
   private clinicSessionRepo: ClinicSessionRepository
@@ -91,6 +92,17 @@ export default class ClinicSessionController {
     await request.validate(DeleteClinicSessionRequest)
 
     const clinicSessionId = params.id
+
+    const reservationData = await Reservation.query()
+      .where('clinic_session_id', clinicSessionId)
+      .first()
+
+    if(Boolean(reservationData)){
+      return response.badRequest({
+        code: 400,
+        message: `Unable to delete clinic session because there are existing reservations associated with it. Please cancel the reservations first.`
+      })
+    }
 
     await this.clinicSessionRepo.delete(clinicSessionId)
     return response.status(204).json(null)

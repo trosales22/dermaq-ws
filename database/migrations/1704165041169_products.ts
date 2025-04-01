@@ -12,6 +12,7 @@ export default class ProductsSchema extends BaseSchema {
       table.string('description', 500).nullable()
       table.string('photo_url', 500).nullable()
       table.json('photo_gallery').nullable()
+      table.decimal('price', 10, 2).defaultTo(0).nullable()
       table.integer('quantity').defaultTo(0).index()
       table.dateTime('created_at', { useTz: true }).notNullable()
       table.dateTime('updated_at', { useTz: true })

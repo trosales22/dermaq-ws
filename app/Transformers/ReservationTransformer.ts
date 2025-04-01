@@ -40,6 +40,7 @@ export default class ReservationTransformer extends TransformerAbstract {
         code: model.status,
         label: GeneralConstants.RESERVATION_STATUS_LABELS[model.status]
       },
+      queue_number: model.queue_number,
       created_at: DateFormatterHelper.formatDate(model.created_at),
       updated_at: DateFormatterHelper.formatDate(model.updated_at)
     }

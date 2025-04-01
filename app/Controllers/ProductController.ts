@@ -47,7 +47,7 @@ export default class ProductController {
     await request.validate(CreateProductRequest)
 
     let payload = request.only([
-      'code', 'name', 'description', 'photo_url', 'photo_gallery', 'quantity'
+      'code', 'name', 'description', 'photo_url', 'photo_gallery', 'price', 'quantity'
     ])
 
     payload['photo_gallery'] = JSON.stringify(payload.photo_gallery || [])
@@ -67,7 +67,7 @@ export default class ProductController {
 
     const productId = params.id
 
-    let payload = request.only(['code', 'name', 'description', 'photo_url', 'photo_gallery', 'quantity'])
+    let payload = request.only(['code', 'name', 'description', 'photo_url', 'photo_gallery', 'price', 'quantity'])
 
     payload['photo_gallery'] = JSON.stringify(payload.photo_gallery || [])
 

@@ -1,5 +1,6 @@
+import GeneralConstants from "App/Constants/GeneralConstants";
 import CreateException from "App/Exceptions/CreateException";
-import Product from "App/Models/Product";
+import UpdateException from "App/Exceptions/UpdateException";
 import Reservation from "App/Models/Reservation";
 
 export default class ReservationRepository {
@@ -34,8 +35,27 @@ export default class ReservationRepository {
       .paginate(filters.page, filters.limit)
   }
 
+  async getCountByClinicSessionId(uuid: string) {
+    const query: any = Reservation.query()
+      .where('clinic_session_id', uuid)
+      .where('status', GeneralConstants.RESERVATION_STATUS_CODES.CONFIRMED)
+      .count('* as count')
+      .first()
+
+    return query?.count || 0;
+  }
+
+  async isExistsByParams(clinicSessionId: string, customerId: string): Promise<boolean>{
+    const exists = Reservation.query()
+      .where('clinic_session_id', clinicSessionId)
+      .where('customer_id', customerId)
+      .first()
+
+    return Boolean(exists)
+  }
+
   async add(data){
-    return await Product.create(data).then(
+    return await Reservation.create(data).then(
       (created) => {
         return created.serialize()
       },
@@ -44,4 +64,15 @@ export default class ReservationRepository {
       }
     )
   }
+
+  async update(uuid: string, dataToBeAdded) {
+      return await Reservation.query().update(dataToBeAdded).where('uuid', uuid).then(
+        (response) => {
+          return response
+        },
+        (error) => {
+          throw new UpdateException('reservation', error.message)
+        }
+      )
+    }
 }

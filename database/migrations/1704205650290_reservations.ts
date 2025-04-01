@@ -11,6 +11,7 @@ export default class ReservationsSchema extends BaseSchema {
       table.uuid('clinic_session_id').notNullable().index()
       table.uuid('customer_id').notNullable().index()
       table.string('status').notNullable().defaultTo('pending').index()
+      table.integer('queue_number').nullable().defaultTo(0).index()
       table.dateTime('created_at', { useTz: true }).notNullable()
       table.dateTime('updated_at', { useTz: true }).nullable()
       table.index(['created_at', 'updated_at'])

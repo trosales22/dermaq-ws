@@ -33,6 +33,13 @@ export default class Reservation extends BaseModel {
   @column({ serializeAs: 'status', columnName: 'status' })
   public status: string;
 
+  @column({
+    serializeAs: 'queue_number',
+    columnName: 'queue_number',
+    consume: (value: string) => Number(value)
+  })
+  public queueNumber: number;
+
   @column.dateTime({
     serializeAs: 'created_at',
     columnName: 'created_at',

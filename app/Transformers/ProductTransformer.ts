@@ -11,6 +11,7 @@ export default class ProductTransformer extends TransformerAbstract {
       description: model.description,
       photo_url: model.photo_url,
       photo_gallery: GeneralHelper.parseJsonOrArray(model.photo_gallery),
+      price: model.price,
       quantity: model.quantity,
       created_at: DateFormatterHelper.formatDate(model.created_at),
       updated_at: DateFormatterHelper.formatDate(model.updated_at)

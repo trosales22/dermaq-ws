@@ -46,12 +46,6 @@ export default class GeneralConstants {
 
   public static RESERVATION_PREFIX = 'DERMAQ'
 
-  public static VEHICLE_LIST_SORT_TYPES = {
-    PRICE: 'price',
-    BRAND: 'brand',
-    MODEL: 'model'
-  }
-
   public static MONTH_NAMES = {
     1: 'January',
     2: 'February',

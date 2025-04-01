@@ -4,12 +4,18 @@ import DateFormatterHelper from 'App/Helpers/DateFormatterHelper'
 
 export default class ClinicSessionTransformer extends TransformerAbstract {
   public async transform(model: any) {
+    const sessionDate = model.session_date
+    const startTime = model.start_time
+    const endTime = model.end_time
+
     return {
       id: model.uuid,
       refno: model.refno,
-      session_date: model.session_date,
-      start_time: model.start_time,
-      end_time: model.end_time,
+      session_date: sessionDate,
+      start_time: startTime,
+      end_time: endTime,
+      formatted_start_time: DateFormatterHelper.formatTimeTo12Hour(sessionDate, startTime),
+      formatted_end_time: DateFormatterHelper.formatTimeTo12Hour(sessionDate, endTime),
       max_slots: model.max_slots,
       status: {
         code: model.status,
