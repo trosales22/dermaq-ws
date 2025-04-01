@@ -19,7 +19,11 @@ export default class AuthController {
     await request.validate(LoginValidator)
 
     const { user_id, password } = request.only(['user_id', 'password'])
-    const userData = await User.query().where('email', user_id).orWhere('username', user_id).first()
+    const userData = await User.query()
+      .whereIn('profile_type', [GeneralConstants.ROLE_TYPES.ADMIN, GeneralConstants.ROLE_TYPES.STAFF])
+      .where('email', user_id)
+      .orWhere('username', user_id)
+      .first()
 
     if(!userData){
       return response.badRequest({ code: 400, message: 'User not found.' })
