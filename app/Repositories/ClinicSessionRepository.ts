@@ -38,6 +38,18 @@ export default class ClinicSessionRepository {
     )
   }
 
+  async getByRefno(refno: string) {
+    return ClinicSession.query()
+      .where('refno', refno)
+      .firstOrFail()
+      .then((res) => {
+        return res.serialize()
+      }, (err) => {
+        throw new NotFoundException('clinic session', err.message)
+      }
+    )
+  }
+
   async add(data){
     return await ClinicSession.create(data).then(
       (created) => {

@@ -12,6 +12,7 @@ import UpdateClinicSessionRequest from 'App/Validators/ClinicSession/UpdateClini
 import DeleteClinicSessionRequest from 'App/Validators/ClinicSession/DeleteClinicSessionRequest'
 import GeneralConstants from 'App/Constants/GeneralConstants'
 import Reservation from 'App/Models/Reservation'
+import ViewClinicSessionByRefNoRequest from 'App/Validators/ClinicSession/ViewClinicSessionByRefNoRequest'
 
 export default class ClinicSessionController {
   private clinicSessionRepo: ClinicSessionRepository
@@ -33,6 +34,34 @@ export default class ClinicSessionController {
     const serializedList = list.serialize()
     const transformed = await transform.collection(serializedList.data, ClinicSessionTransformer)
     const serialized = JSONSerializerHelper.serialize(ClinicSession.table, serializedList.meta, transformed)
+
+    return response.json(serialized)
+  }
+
+  // @ts-ignore
+  public async indexNonAuth({ request, response, transform }: HttpContextContract){
+    await request.validate(ListClinicSessionRequest)
+
+    const list = await this.clinicSessionRepo.getAll({
+      q: request.input('q', null),
+      page: request.input('page', 1),
+      limit: request.input('limit', 25)
+    })
+
+    const serializedList = list.serialize()
+    const transformed = await transform.collection(serializedList.data, ClinicSessionTransformer)
+    const serialized = JSONSerializerHelper.serialize(ClinicSession.table, serializedList.meta, transformed)
+
+    return response.json(serialized)
+  }
+
+  // @ts-ignore
+  public async showByRefNo({ params, request, response, transform }: HttpContextContract) {
+    await request.validate(ViewClinicSessionByRefNoRequest)
+
+    const data = await this.clinicSessionRepo.getByRefno(params.refno)
+    const transformed = await transform.item(data, ClinicSessionTransformer)
+    const serialized = JSONSerializerHelper.serialize(ClinicSession.table, null, transformed)
 
     return response.json(serialized)
   }

@@ -112,14 +112,14 @@ export default class CustomerController {
     const startTime = clinicSessionData?.start_time
     const endTime = clinicSessionData?.end_time
 
-    const exists = await this.reservationRepo.isExistsByParams(clinicSessionId, authUserUuid)
+    // const exists = await this.reservationRepo.isExistsByParams(clinicSessionId, authUserUuid)
 
-    if(exists){
-      return response.badRequest({
-        code: 400,
-        message: `You have already made a reservation for this session. Please check your existing reservations or choose another session.`
-      })
-    }
+    // if(exists){
+    //   return response.badRequest({
+    //     code: 400,
+    //     message: `You have already made a reservation for this session. Please check your existing reservations or choose another session.`
+    //   })
+    // }
 
     const reservedCount = await this.reservationRepo.getCountByClinicSessionId(clinicSessionId)
 
