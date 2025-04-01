@@ -19,6 +19,12 @@ export default class ClinicSession extends BaseModel {
   @column({ serializeAs: 'uuid', columnName: 'uuid' })
   public uuid: string;
 
+  @column({ serializeAs: 'title', columnName: 'title' })
+  public title: string;
+
+  @column({ serializeAs: 'description', columnName: 'description' })
+  public description: string;
+
   @column({ serializeAs: 'refno', columnName: 'refno' })
   public refno: string;
 

@@ -11,6 +11,8 @@ export default class ClinicSessionTransformer extends TransformerAbstract {
     return {
       id: model.uuid,
       refno: model.refno,
+      title: model.title,
+      description: model.description,
       session_date: sessionDate,
       start_time: startTime,
       end_time: endTime,

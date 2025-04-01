@@ -53,6 +53,7 @@ export default class ClinicSessionController {
     await request.validate(CreateClinicSessionRequest)
 
     let payload = request.only([
+      'title', 'description',
       'session_date', 'start_time', 'end_time', 'max_slots'
     ])
 
@@ -74,6 +75,7 @@ export default class ClinicSessionController {
     const clinicSessionId = params.id
 
     let payload = request.only([
+      'title', 'description',
       'session_date', 'start_time', 'end_time', 'status', 'max_slots'
     ])
 

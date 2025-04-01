@@ -46,12 +46,12 @@ export default class ReservationRepository {
   }
 
   async isExistsByParams(clinicSessionId: string, customerId: string): Promise<boolean>{
-    const exists = Reservation.query()
+    const exists = await Reservation.query()
       .where('clinic_session_id', clinicSessionId)
       .where('customer_id', customerId)
       .first()
 
-    return Boolean(exists)
+    return exists !== null
   }
 
   async add(data){

@@ -1,4 +1,4 @@
-import {schema} from '@ioc:Adonis/Core/Validator'
+import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class CreateClinicSessionRequest {
@@ -9,6 +9,12 @@ export default class CreateClinicSessionRequest {
   }
 
   public schema = schema.create({
+    title: schema.string({ trim: true, escape: true }, [
+      rules.maxLength(50)
+    ]),
+    description: schema.string({ trim: true, escape: true }, [
+      rules.maxLength(200)
+    ]),
     session_date: schema.date({format: this.sessionDateFormat}),
     start_time: schema.date({format: this.startEndTimeFormat}),
     end_time: schema.date({format: this.startEndTimeFormat}),
@@ -16,6 +22,10 @@ export default class CreateClinicSessionRequest {
   })
 
   public messages = {
+    'title.required': 'Title is required',
+    'title.maxLength': 'Title should not exceed 50 characters',
+    'description.required': 'Description is required',
+    'description.maxLength': 'Description should not exceed 200 characters',
     'session_date.required': 'Session Date is required',
     'session_date.date.format': 'Session Date must be formatted as ' + this.sessionDateFormat,
     'start_time.required': 'Start Time is required',

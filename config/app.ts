@@ -11,6 +11,11 @@ import type { ServerConfig } from '@ioc:Adonis/Core/Server'
 import type { LoggerConfig } from '@ioc:Adonis/Core/Logger'
 import type { ProfilerConfig } from '@ioc:Adonis/Core/Profiler'
 import type { ValidatorConfig } from '@ioc:Adonis/Core/Validator'
+import admin from 'firebase-admin'
+
+admin.initializeApp({
+  databaseURL: Env.get('FIREBASE_DATABASE_URL')
+});
 
 /*
 |--------------------------------------------------------------------------

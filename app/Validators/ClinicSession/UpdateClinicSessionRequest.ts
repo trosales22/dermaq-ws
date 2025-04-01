@@ -16,6 +16,12 @@ export default class UpdateClinicSessionRequest {
         rules.exists({table: ClinicSession.table, column: 'uuid'})
       ])
     }),
+    title: schema.string.optional({ trim: true, escape: true }, [
+      rules.maxLength(50)
+    ]),
+    description: schema.string.optional({ trim: true, escape: true }, [
+      rules.maxLength(200)
+    ]),
     session_date: schema.date.optional({format: this.sessionDateFormat}),
     start_time: schema.date.optional({format: this.startEndTimeFormat}),
     end_time: schema.date.optional({format: this.startEndTimeFormat}),
@@ -30,6 +36,8 @@ export default class UpdateClinicSessionRequest {
   public messages = {
     'params.id.required': 'Clinic Session ID is required',
     'params.id.exists': 'Clinic Session ID does not exist',
+    'title.maxLength': 'Title should not exceed 50 characters',
+    'description.maxLength': 'Description should not exceed 200 characters',
     'session_date.date.format': 'Session Date must be formatted as ' + this.sessionDateFormat,
     'start_time.date.format': 'Start Time must be formatted as ' + this.startEndTimeFormat,
     'end_time.date.format': 'End Time must be formatted as ' + this.startEndTimeFormat,

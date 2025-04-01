@@ -11,6 +11,7 @@ import ReservationRepository from 'App/Repositories/ReservationRepository'
 import DateFormatterHelper from 'App/Helpers/DateFormatterHelper'
 import ClinicSessionRepository from 'App/Repositories/ClinicSessionRepository'
 import Reservation from 'App/Models/Reservation'
+import FirebaseHelper from 'App/Helpers/FirebaseHelper'
 
 export default class CustomerController {
   private userRepo: UserRepository
@@ -106,6 +107,7 @@ export default class CustomerController {
     const clinicSessionId: string = payload.clinic_session_id
 
     const clinicSessionData = await this.clinicSessionRepo.getById(clinicSessionId)
+    const clinicSessionRefNo = clinicSessionData?.refno
     const sessionDate = clinicSessionData?.session_date
     const startTime = clinicSessionData?.start_time
     const endTime = clinicSessionData?.end_time
@@ -149,11 +151,20 @@ export default class CustomerController {
       updated_at: DateFormatterHelper.getCurrentTimestamp()
     })
 
+    await FirebaseHelper.saveQueueNumber({
+      cs_refno: clinicSessionRefNo,
+      queue_no: String(nextQueueNumber),
+      customer_id: authUserUuid,
+      status: GeneralConstants.RESERVATION_STATUS_CODES.CONFIRMED
+    })
+
     return response.json({
       message: 'Successfully reserved a slot.',
       details: {
         refno: refno,
         queue_number: nextQueueNumber,
+        title: clinicSessionData?.title,
+        description: clinicSessionData?.description,
         session_date: sessionDate,
         start_time: startTime,
         end_time: endTime,

@@ -7,6 +7,8 @@ export default class ClinicSessionsSchema extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
       table.uuid('uuid').notNullable().unique().index()
+      table.string('title').nullable().index()
+      table.string('description').nullable()
       table.string('refno').nullable().index()
       table.integer('max_slots').defaultTo(0).index()
       table.string('session_date').notNullable().index()
