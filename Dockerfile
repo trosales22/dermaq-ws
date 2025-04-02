@@ -1,5 +1,5 @@
 # Build AdonisJS
-FROM node:18-alpine as builder
+FROM node:20-alpine as builder
 # Set directory for all files
 WORKDIR /home/node/app
 # Copy source code
