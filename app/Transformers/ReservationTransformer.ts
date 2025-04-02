@@ -21,12 +21,20 @@ export default class ReservationTransformer extends TransformerAbstract {
     let clinicSessionArr: any = null
 
     if(clinicSession){
+      const sessionDate = clinicSession.session_date
+      const startTime = clinicSession.start_time
+      const endTime = clinicSession.end_time
+
       clinicSessionArr = {
         id: clinicSession.uuid,
         refno: clinicSession.refno,
-        session_date: clinicSession.session_date,
-        start_time: clinicSession.start_time,
-        end_time: clinicSession.end_time,
+        title: clinicSession.title,
+        description: clinicSession.description,
+        session_date: sessionDate,
+        start_time: startTime,
+        end_time: endTime,
+        formatted_start_time: DateFormatterHelper.formatTimeTo12Hour(sessionDate, startTime),
+        formatted_end_time: DateFormatterHelper.formatTimeTo12Hour(sessionDate, endTime),
         max_slots: clinicSession.max_slots
       }
     }

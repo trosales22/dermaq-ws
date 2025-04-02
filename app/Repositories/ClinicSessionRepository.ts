@@ -12,6 +12,7 @@ export default class ClinicSessionRepository {
       q,
       sort_by: sortBy = 'id',
       sort_direction: sortDirection = 'desc',
+      status
     } = filters
 
     let queryModel = ClinicSession.query()
@@ -19,6 +20,10 @@ export default class ClinicSessionRepository {
     if(q){
       queryModel
         .where('refno', 'LIKE', '%' + q + '%')
+    }
+
+    if(status){
+      queryModel.where('status', status)
     }
 
     return await queryModel
