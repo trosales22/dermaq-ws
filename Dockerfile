@@ -3,18 +3,18 @@ FROM node:18-alpine as builder
 # Set directory for all files
 WORKDIR /home/node/app
 # Copy source code
-COPY ./project ./
+COPY . ./
 # Install all packages
 RUN npm install && npm i -g pm2
 # Build AdonisJS for production
 RUN npm run build --production
 # Set directory for build files
 WORKDIR /home/node/app/build
-# # Copy ENV file
-COPY ./project/.env ./
-# # Install all packages
+# Copy ENV file
+COPY .env ./
+# Install all packages
 RUN npm ci --production
-# Expose port to outsde world
+# Expose port to outside world
 ENV TZ=Asia/Manila
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
