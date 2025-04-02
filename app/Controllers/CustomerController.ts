@@ -12,6 +12,9 @@ import DateFormatterHelper from 'App/Helpers/DateFormatterHelper'
 import ClinicSessionRepository from 'App/Repositories/ClinicSessionRepository'
 import Reservation from 'App/Models/Reservation'
 import FirebaseHelper from 'App/Helpers/FirebaseHelper'
+import JSONSerializerHelper from 'App/Helpers/JSONSerializerHelper'
+import ReservationTransformer from 'App/Transformers/ReservationTransformer'
+import ListCustomerReservedQueueRequest from 'App/Validators/Customer/ListCustomerReservedQueueRequest'
 
 export default class CustomerController {
   private userRepo: UserRepository
@@ -175,5 +178,31 @@ export default class CustomerController {
         formatted_end_time: DateFormatterHelper.formatTimeTo12Hour(sessionDate, endTime)
       }
     })
+  }
+
+  // @ts-ignore
+  public async reservedQueueIndex({ auth, params, request, response, transform }: HttpContextContract) {
+    await request.validate(ListCustomerReservedQueueRequest)
+
+    const userAuthData = auth.use('api').user!
+    const authUserUuid = userAuthData.uuid
+    const refNo = params.refno
+    const clinicSessionData = await this.clinicSessionRepo.getByRefno(refNo)
+
+    const list = await this.reservationRepo.getAll({
+      q: request.input('q', null),
+      page: request.input('page', 1),
+      limit: request.input('limit', 25),
+      sort_by: 'queue_number',
+      sort_direction: 'asc',
+      clinic_session_id: clinicSessionData?.uuid,
+      customer_id: authUserUuid
+    })
+
+    const serializedList = list.serialize()
+    const transformed = await transform.collection(serializedList.data, ReservationTransformer)
+    const serialized = JSONSerializerHelper.serialize(Reservation.table, serializedList.meta, transformed)
+
+    return response.json(serialized)
   }
 }

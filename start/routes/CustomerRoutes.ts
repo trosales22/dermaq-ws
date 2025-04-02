@@ -15,6 +15,7 @@ export const CustomerRoutes = () => [
     Route.group(() => {
       Route.get('/', async (ctx) => { return new ClinicSessionController().indexNonAuth(ctx)})
       Route.get('/:refno', async (ctx) => { return new ClinicSessionController().showByRefNo(ctx)})
+      Route.get('/:refno/reserved_queues', async (ctx) => { return new CustomerController().reservedQueueIndex(ctx)}).middleware(['auth:api', 'customer'])
     }).prefix('clinic_sessions')
   }).prefix('customers')
 ]
