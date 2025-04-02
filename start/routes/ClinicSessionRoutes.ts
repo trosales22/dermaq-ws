@@ -8,5 +8,8 @@ export const ClinicSessionRoutes = () => {
     Route.post('/', async (ctx) => { return new ClinicSessionController().store(ctx) })
     Route.put('/:id', async (ctx) => { return new ClinicSessionController().update(ctx) })
     Route.delete('/:id', async (ctx) => { return new ClinicSessionController().destroy(ctx) })
+
+    Route.get('/:id/queue_info', async (ctx) => { return new ClinicSessionController().getQueueInfo(ctx) })
+    Route.put('/:id/reservations/:refno', async (ctx) => { return new ClinicSessionController().updateReservation(ctx) })
   }).prefix('clinic_sessions').middleware('auth:api')
 }

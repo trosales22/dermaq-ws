@@ -1,5 +1,6 @@
 import GeneralConstants from "App/Constants/GeneralConstants";
 import CreateException from "App/Exceptions/CreateException";
+import NotFoundException from "App/Exceptions/NotFoundException";
 import UpdateException from "App/Exceptions/UpdateException";
 import Reservation from "App/Models/Reservation";
 
@@ -35,6 +36,48 @@ export default class ReservationRepository {
       .paginate(filters.page, filters.limit)
   }
 
+  async getByRefNo(refno: string) {
+    return Reservation.query()
+      .where('refno', refno)
+      .firstOrFail()
+      .then((res) => {
+        return res.serialize()
+      }, (err) => {
+        throw new NotFoundException('reservation', err.message)
+      }
+    )
+  }
+
+  async getCurrentQueueBySessionId(clinicSessionId: string) {
+    return Reservation.query()
+      .preload('customer')
+      .where('clinic_session_id', clinicSessionId)
+      .where('status', GeneralConstants.RESERVATION_STATUS_CODES.CONFIRMED)
+      .orderBy('queue_number', 'asc')
+      .firstOrFail()
+      .then((res) => {
+        return res.serialize()
+      }, () => {
+        return null
+      }
+    )
+  }
+
+  async getLastQueueBySessionId(clinicSessionId: string) {
+    return Reservation.query()
+      .preload('customer')
+      .where('clinic_session_id', clinicSessionId)
+      .where('status', GeneralConstants.RESERVATION_STATUS_CODES.CONFIRMED)
+      .orderBy('queue_number', 'desc')
+      .firstOrFail()
+      .then((res) => {
+        return res.serialize()
+      }, () => {
+        return null
+      }
+    )
+  }
+
   async getCountByClinicSessionId(uuid: string) {
     const query: any = Reservation.query()
       .where('clinic_session_id', uuid)
@@ -45,13 +88,13 @@ export default class ReservationRepository {
     return query?.count || 0;
   }
 
-  async isExistsByParams(clinicSessionId: string, customerId: string): Promise<boolean>{
-    const exists = await Reservation.query()
+  async getCountByParams(clinicSessionId: string, customerId: string): Promise<number>{
+    const query: any = await Reservation.query()
       .where('clinic_session_id', clinicSessionId)
       .where('customer_id', customerId)
       .first()
 
-    return exists !== null
+    return query?.count || 0;
   }
 
   async add(data){

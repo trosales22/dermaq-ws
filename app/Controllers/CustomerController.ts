@@ -103,6 +103,7 @@ export default class CustomerController {
 
     const userAuthData = auth.use('api').user!
     const authUserUuid = userAuthData.uuid
+    const authFullname = `${userAuthData?.firstName} ${userAuthData?.lastName}`
     const payload = request.only(['clinic_session_id'])
     const clinicSessionId: string = payload.clinic_session_id
 
@@ -112,14 +113,14 @@ export default class CustomerController {
     const startTime = clinicSessionData?.start_time
     const endTime = clinicSessionData?.end_time
 
-    // const exists = await this.reservationRepo.isExistsByParams(clinicSessionId, authUserUuid)
+    const reservationCount: number = await this.reservationRepo.getCountByParams(clinicSessionId, authUserUuid)
 
-    // if(exists){
-    //   return response.badRequest({
-    //     code: 400,
-    //     message: `You have already made a reservation for this session. Please check your existing reservations or choose another session.`
-    //   })
-    // }
+    if(reservationCount >= 5){
+      return response.badRequest({
+        code: 400,
+        message: `You have already made 5 reservations for this session. You cannot make more reservations. Please check your existing reservations or choose another session.`
+      })
+    }
 
     const reservedCount = await this.reservationRepo.getCountByClinicSessionId(clinicSessionId)
 
@@ -152,9 +153,11 @@ export default class CustomerController {
     })
 
     await FirebaseHelper.saveQueueNumber({
+      reservation_refno: refno,
       cs_refno: clinicSessionRefNo,
       queue_no: String(nextQueueNumber),
       customer_id: authUserUuid,
+      customer_name: authFullname,
       status: GeneralConstants.RESERVATION_STATUS_CODES.CONFIRMED
     })
 

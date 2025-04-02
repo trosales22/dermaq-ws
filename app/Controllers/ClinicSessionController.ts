@@ -13,12 +13,18 @@ import DeleteClinicSessionRequest from 'App/Validators/ClinicSession/DeleteClini
 import GeneralConstants from 'App/Constants/GeneralConstants'
 import Reservation from 'App/Models/Reservation'
 import ViewClinicSessionByRefNoRequest from 'App/Validators/ClinicSession/ViewClinicSessionByRefNoRequest'
+import UpdateReservationRequest from 'App/Validators/Reservation/UpdateReservationRequest'
+import FirebaseHelper from 'App/Helpers/FirebaseHelper'
+import ReservationRepository from 'App/Repositories/ReservationRepository'
+import ViewReservationQueueInfoRequest from 'App/Validators/Reservation/ViewReservationQueueInfoRequest'
 
 export default class ClinicSessionController {
   private clinicSessionRepo: ClinicSessionRepository
+  private reservationRepo: ReservationRepository
 
   constructor() {
     this.clinicSessionRepo = new ClinicSessionRepository()
+    this.reservationRepo = new ReservationRepository()
   }
 
   // @ts-ignore
@@ -137,5 +143,55 @@ export default class ClinicSessionController {
 
     await this.clinicSessionRepo.delete(clinicSessionId)
     return response.status(204).json(null)
+  }
+
+  public async getQueueInfo({ params, request, response }: HttpContextContract){
+    await request.validate(ViewReservationQueueInfoRequest)
+
+    const clinicSessionId = params.id
+    const currentQueueData = await this.reservationRepo.getCurrentQueueBySessionId(clinicSessionId)
+    const lastQueueData = await this.reservationRepo.getLastQueueBySessionId(clinicSessionId)
+    let nowServingRes: any = null
+
+    if(currentQueueData){
+      nowServingRes = {
+        queue: currentQueueData?.queue_number,
+        refno: currentQueueData?.refno,
+        customer: `${currentQueueData?.customer?.firstname} ${currentQueueData?.customer?.lastname}`
+      }
+    }
+
+    return response.json({
+      now_serving: nowServingRes,
+      last_queue: lastQueueData?.queue_number || 0
+    })
+  }
+
+  public async updateReservation({ params, request, response }: HttpContextContract){
+    await request.validate(UpdateReservationRequest)
+
+    const clinicSessionId = params.id
+    const reservationRefNo = params.refno
+    const payload = request.only(['status'])
+    const status = payload.status
+
+    const clinicSessionData = await this.clinicSessionRepo.getById(clinicSessionId)
+    const reservationData = await this.reservationRepo.getByRefNo(reservationRefNo)
+
+    await this.reservationRepo.update(reservationData?.uuid, {
+      status: status,
+      updated_at: DateFormatterHelper.getCurrentTimestamp()
+    })
+
+    await FirebaseHelper.updateQueueStatus({
+      cs_refno: clinicSessionData?.refno,
+      queue_no: String(reservationData?.queue_number),
+      status: status
+    })
+
+    return response.json({
+      code: 200,
+      message: 'Update reservation successfully.'
+    })
   }
 }
