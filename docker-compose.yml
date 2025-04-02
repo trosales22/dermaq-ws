@@ -1,15 +1,19 @@
-version: "3"
 services:
   app:
-    container_name: ${COMPOSE_PROJECT_NAME}-app
+    container_name: ${COMPOSE_PROJECT_NAME:-app}-app
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "${COMPOSE_APP_PORT}:3335"
+      - "${COMPOSE_APP_PORT:-3335}:3335"
+    environment:
+      NODE_ENV: development
+    volumes:
+      - .:/app
+      - /app/node_modules
     networks:
-      - app-local-ws
+      - app-network
 
 networks:
-  app-local-ws:
+  app-network:
     driver: bridge
