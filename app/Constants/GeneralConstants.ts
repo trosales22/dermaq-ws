@@ -13,9 +13,20 @@ export default class GeneralConstants {
     CUSTOMER: 'CUSTOMER'
   }
 
+  public static ROLE_LABELS = {
+    [this.ROLE_TYPES.ADMIN]: 'Administrator',
+    [this.ROLE_TYPES.STAFF]: 'Staff',
+    [this.ROLE_TYPES.CUSTOMER]: 'Customer',
+  }
+
   public static GENERAL_STATUS_TYPES = {
     ACTIVE: 'active',
     INACTIVE: 'inactive',
+  }
+
+  public static GENERAL_STATUS_LABELS = {
+    [this.GENERAL_STATUS_TYPES.ACTIVE]: 'Active',
+    [this.GENERAL_STATUS_TYPES.INACTIVE]: 'Inactive',
   }
 
   public static CLINIC_SESSION_STATUS_CODES = {
