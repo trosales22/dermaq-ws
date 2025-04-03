@@ -33,6 +33,7 @@ export default class ReservationTransformer extends TransformerAbstract {
         session_date: sessionDate,
         start_time: startTime,
         end_time: endTime,
+        formatted_session_date: DateFormatterHelper.formatDateToHuman(sessionDate, startTime),
         formatted_start_time: DateFormatterHelper.formatTimeTo12Hour(sessionDate, startTime),
         formatted_end_time: DateFormatterHelper.formatTimeTo12Hour(sessionDate, endTime),
         max_slots: clinicSession.max_slots

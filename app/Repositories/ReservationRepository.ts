@@ -85,16 +85,17 @@ export default class ReservationRepository {
       .count('* as count')
       .first()
 
-    return query?.count || 0;
+    return query?.$extras?.count || 0;
   }
 
   async getCountByParams(clinicSessionId: string, customerId: string): Promise<number>{
     const query: any = await Reservation.query()
       .where('clinic_session_id', clinicSessionId)
       .where('customer_id', customerId)
+      .count('* as count')
       .first()
 
-    return query?.count || 0;
+    return query?.$extras?.count || 0;
   }
 
   async add(data){
