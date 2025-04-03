@@ -3,6 +3,7 @@
 ## Stack
 - Adonis5 (TypeScript)
 - MySQL
+- Firebase
 
 ## Setup
 - Run `npm install`
@@ -21,6 +22,8 @@
   HASH_DRIVER=bcrypt
   
   TZ=Asia/Manila
+
+  FIREBASE_DATABASE_URL=
 ```
 - Then execute the ff.
 ```bash
