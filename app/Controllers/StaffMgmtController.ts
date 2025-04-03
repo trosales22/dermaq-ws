@@ -52,7 +52,7 @@ export default class StaffMgmtController {
   public async store({ params, request, response, transform }: HttpContextContract) {
     await request.validate(CreateStaffRequest)
 
-    let payload = request.only(['username', 'email', 'firstname', 'lastname', 'mobile', 'password'])
+    let payload = request.only(['username', 'email', 'firstname', 'lastname', 'mobile', 'photo_url', 'password'])
     payload['profile_type'] = GeneralConstants.ROLE_TYPES.STAFF
     const created = await this.userRepo.add(payload)
 
@@ -69,7 +69,7 @@ export default class StaffMgmtController {
 
     const userId = params.id
 
-    let payload = request.only(['username', 'email', 'firstname', 'lastname', 'mobile'])
+    let payload = request.only(['username', 'email', 'firstname', 'lastname', 'mobile', 'photo_url'])
     const updatedAt = DateFormatterHelper.getCurrentTimestamp()
     payload['updated_at'] = updatedAt
     await this.userRepo.update(userId, payload)

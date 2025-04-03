@@ -41,7 +41,7 @@ export default class UpdateStaffRequest {
     lastname: schema.string.optional({ trim: true, escape: true }, [
       rules.maxLength(50)
     ]),
-    mobile: schema.string.optional({escape: true, trim: true}, [
+    mobile: schema.string.optional({trim: true}, [
       rules.regex(new RegExp('^(\\+639|09|639)[0-9]{9}$')),
       rules.unique({
         table: User.table,
@@ -50,6 +50,9 @@ export default class UpdateStaffRequest {
           uuid: this.ctx.params.id
         }
       })
+    ]),
+    photo_url: schema.string.optional({ trim: true, escape: true }, [
+      rules.maxLength(500)
     ])
   })
 
@@ -63,6 +66,7 @@ export default class UpdateStaffRequest {
     'firstname.maxLength': 'Firstname max length is 50',
     'lastname.maxLength': 'Lastname max length is 50',
     'mobile.regex': 'Mobile number format is invalid',
-    'mobile.unique': 'Mobile number already exist'
+    'mobile.unique': 'Mobile number already exist',
+    'photo_url.maxLength': 'Photo URL max length is 500',
   }
 }

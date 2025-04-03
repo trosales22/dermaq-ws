@@ -20,9 +20,12 @@ export default class CreateStaffRequest {
     lastname: schema.string({ trim: true, escape: true }, [
       rules.maxLength(50)
     ]),
-    mobile: schema.string({escape: true, trim: true}, [
+    mobile: schema.string({trim: true}, [
       rules.regex(new RegExp('^(\\+639|09|639)[0-9]{9}$')),
       rules.unique({table: User.table, column: 'mobile'})
+    ]),
+    photo_url: schema.string.optional({ trim: true, escape: true }, [
+      rules.maxLength(500)
     ]),
     password: schema.string({ trim: true, escape: true }, [
       rules.minLength(8),
@@ -44,6 +47,7 @@ export default class CreateStaffRequest {
     'mobile.required': 'Mobile number is required',
     'mobile.regex': 'Mobile number format is invalid',
     'mobile.unique': 'Mobile number already exist',
+    'photo_url.maxLength': 'Photo URL max length is 500',
     'password.required': 'Password is required',
     'password.minLength': 'Password must be atleast 8 characters',
     'password.maxLength': 'Password max length is 16'
