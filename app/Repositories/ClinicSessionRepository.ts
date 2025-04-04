@@ -19,7 +19,8 @@ export default class ClinicSessionRepository {
 
     if(q){
       queryModel
-        .where('refno', 'LIKE', '%' + q + '%')
+        .where('refno', 'LIKE', `%${q}%`)
+        .orWhere('title', 'LIKE', `%${q}%`)
     }
 
     if(status){
