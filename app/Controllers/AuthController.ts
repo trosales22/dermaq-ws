@@ -7,6 +7,7 @@ import GeneralConstants from 'App/Constants/GeneralConstants'
 import ChangePasswordRequest from 'App/Validators/ChangePasswordRequest'
 import UpdateProfileRequest from 'App/Validators/UpdateProfileRequest'
 import UserRepository from 'App/Repositories/UserRepository'
+import DateFormatterHelper from 'App/Helpers/DateFormatterHelper'
 
 export default class AuthController {
   private userRepo: UserRepository
@@ -68,13 +69,16 @@ export default class AuthController {
     await request.validate(ChangePasswordRequest)
 
     const user = auth.user!
+    const payload = request.only(['old_password', 'new_password'])
 
-    if (!(await user.verifyPassword(request.input('old_password')))) {
+    if (!(await user.verifyPassword(payload.old_password))) {
       return response.badRequest({ code: 400, message: 'Invalid old password' })
     }
 
-    user.password = request.input('new_password')
-    await user.save()
+    await this.userRepo.update(user.uuid, {
+      password: payload.new_password,
+      updated_at: DateFormatterHelper.getCurrentTimestamp()
+    })
 
     return response.json({
       code: 200,
