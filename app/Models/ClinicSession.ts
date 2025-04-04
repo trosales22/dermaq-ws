@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
 import { v4 as uuidv4 } from 'uuid'
-import { BaseModel, beforeCreate, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeCreate, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import GeneralConstants from 'App/Constants/GeneralConstants'
+import Reservation from './Reservation'
 
 export default class ClinicSession extends BaseModel {
   public static table = 'clinic_sessions'
@@ -70,4 +71,10 @@ export default class ClinicSession extends BaseModel {
   public static setId(clinicSession: ClinicSession) {
     clinicSession.uuid = uuidv4()
   }
+
+  @hasMany(() => Reservation, {
+    localKey: 'uuid',
+    foreignKey: 'clinicSessionId'
+  })
+  public reservations: HasMany<typeof Reservation>
 }

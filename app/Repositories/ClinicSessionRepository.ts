@@ -15,7 +15,7 @@ export default class ClinicSessionRepository {
       status
     } = filters
 
-    let queryModel = ClinicSession.query()
+    let queryModel = ClinicSession.query().preload('reservations')
 
     if(q){
       queryModel
@@ -32,7 +32,7 @@ export default class ClinicSessionRepository {
   }
 
   async getById(uuid: string) {
-    return ClinicSession.query()
+    return ClinicSession.query().preload('reservations')
       .where('uuid', uuid)
       .firstOrFail()
       .then((res) => {
@@ -44,7 +44,7 @@ export default class ClinicSessionRepository {
   }
 
   async getByRefno(refno: string) {
-    return ClinicSession.query()
+    return ClinicSession.query().preload('reservations')
       .where('refno', refno)
       .firstOrFail()
       .then((res) => {

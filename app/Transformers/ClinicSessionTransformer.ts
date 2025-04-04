@@ -7,6 +7,8 @@ export default class ClinicSessionTransformer extends TransformerAbstract {
     const sessionDate = model.session_date
     const startTime = model.start_time
     const endTime = model.end_time
+    const maxSlots: number = model.max_slots
+    const reservations = model.reservations || []
 
     return {
       id: model.uuid,
@@ -19,7 +21,14 @@ export default class ClinicSessionTransformer extends TransformerAbstract {
       formatted_session_date: DateFormatterHelper.formatDateToHuman(sessionDate, startTime),
       formatted_start_time: DateFormatterHelper.formatTimeTo12Hour(sessionDate, startTime),
       formatted_end_time: DateFormatterHelper.formatTimeTo12Hour(sessionDate, endTime),
-      max_slots: model.max_slots,
+      total_reservations: {
+        overall: reservations.length,
+        confirmed: reservations.filter(item => item.status === GeneralConstants.RESERVATION_STATUS_CODES.CONFIRMED).length,
+        completed: reservations.filter(item => item.status === GeneralConstants.RESERVATION_STATUS_CODES.COMPLETED).length,
+        unattended: reservations.filter(item => item.status === GeneralConstants.RESERVATION_STATUS_CODES.UNATTENDED).length
+      },
+      max_slots: maxSlots,
+      remaining_slots: (maxSlots - reservations.length),
       status: {
         code: model.status,
         label: GeneralConstants.CLINIC_SESSION_STATUS_LABELS[model.status]
