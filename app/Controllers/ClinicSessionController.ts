@@ -34,7 +34,8 @@ export default class ClinicSessionController {
     const list = await this.clinicSessionRepo.getAll({
       q: request.input('q', null),
       page: request.input('page', 1),
-      limit: request.input('limit', 25)
+      limit: request.input('limit', 25),
+      status: request.input('status', null)
     })
 
     const serializedList = list.serialize()
