@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon'
 import { v4 as uuidv4 } from 'uuid'
-import { BaseModel, beforeCreate, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeCreate, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import GeneralConstants from 'App/Constants/GeneralConstants'
+import Product from './Product'
 
-export default class Product extends BaseModel {
-  public static table = 'products'
+export default class OrderProduct extends BaseModel {
+  public static table = 'order_products'
 
   @column({
     isPrimary: true,
@@ -19,27 +20,11 @@ export default class Product extends BaseModel {
   @column({ serializeAs: 'uuid', columnName: 'uuid' })
   public uuid: string;
 
-  @column({ serializeAs: 'code', columnName: 'code' })
-  public code: string
+  @column({ serializeAs: 'order_id', columnName: 'order_id' })
+  public orderId: string
 
-  @column({ serializeAs: 'name', columnName: 'name' })
-  public name: string
-
-  @column({ serializeAs: 'description', columnName: 'description' })
-  public description: string
-
-  @column({ serializeAs: 'photo_url', columnName: 'photo_url' })
-  public photoUrl: string
-
-  @column({ serializeAs: 'photo_gallery', columnName: 'photo_gallery' })
-  public photoGallery: string
-
-  @column({
-    serializeAs: 'price',
-    columnName: 'price',
-    consume: (value: string) => Number(value)
-  })
-  public price: number;
+  @column({ serializeAs: 'product_id', columnName: 'product_id' })
+  public productId: string
 
   @column({
     serializeAs: 'quantity',
@@ -68,7 +53,13 @@ export default class Product extends BaseModel {
   public updatedAt: DateTime
 
   @beforeCreate()
-  public static setId(product: Product) {
-    product.uuid = uuidv4()
+  public static setUuid(orderProduct: OrderProduct) {
+    orderProduct.uuid = uuidv4()
   }
+
+  @belongsTo(() => Product, {
+    localKey: 'uuid',
+    foreignKey: 'productId'
+  })
+  public product: BelongsTo<typeof Product>
 }

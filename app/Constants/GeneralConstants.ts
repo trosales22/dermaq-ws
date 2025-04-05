@@ -56,6 +56,7 @@ export default class GeneralConstants {
   }
 
   public static RESERVATION_PREFIX = 'DERMAQ'
+  public static ORDERS_PREFIX = 'DERMAQORD'
 
   public static MONTH_NAMES = {
     1: 'January',

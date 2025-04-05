@@ -5,6 +5,7 @@ import { ClinicSessionRoutes } from './ClinicSessionRoutes'
 import { ReservationRoutes } from './ReservationRoutes'
 import { DashboardRoutes } from './DashboardRoutes'
 import { StaffMgmtRoutes } from './StaffMgmtRoutes'
+import { OrderRoutes } from './OrderRoutes'
 
 export const CoreRoutes = () => [
   Route.group(() => {
@@ -18,6 +19,7 @@ export const CoreRoutes = () => [
     ClinicSessionRoutes()
     ReservationRoutes()
     ProductRoutes()
+    OrderRoutes()
     StaffMgmtRoutes()
   }).prefix('core')
 ]
