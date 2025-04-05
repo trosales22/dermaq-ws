@@ -75,8 +75,10 @@ export default class AuthController {
       return response.badRequest({ code: 400, message: 'Invalid old password' })
     }
 
+    const newPassword = await Hash.make(payload.new_password)
+
     await this.userRepo.update(user.uuid, {
-      password: payload.new_password,
+      password: newPassword,
       updated_at: DateFormatterHelper.getCurrentTimestamp()
     })
 
