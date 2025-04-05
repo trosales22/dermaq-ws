@@ -12,6 +12,7 @@ import GeneralHelper from 'App/Helpers/GeneralHelper'
 import GeneralConstants from 'App/Constants/GeneralConstants'
 import Product from 'App/Models/Product'
 import DateFormatterHelper from 'App/Helpers/DateFormatterHelper'
+import OrderProduct from 'App/Models/OrderProduct'
 
 export default class OrderController {
   private orderRepo: OrderRepository
@@ -120,6 +121,17 @@ export default class OrderController {
     await request.validate(DeleteOrderRequest)
 
     const orderId = params.id
+    const orderProducts = await OrderProduct.query().where('order_id', orderId);
+
+    const updateProductPromises = orderProducts.map(async (orderProduct) => {
+        const product = await Product.query().where('uuid', orderProduct.productId).first();
+        if (product) {
+          product.quantity += orderProduct.quantity;
+          await product.save();
+        }
+    });
+
+    await Promise.all(updateProductPromises);
 
     await this.orderProductRepo.deleteByOrderId(orderId)
     await this.orderRepo.delete(orderId)

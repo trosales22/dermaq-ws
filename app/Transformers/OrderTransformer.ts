@@ -24,7 +24,7 @@ export default class OrderTransformer extends TransformerAbstract {
       assistantArr = {
         id: asisstant.uuid,
         email: asisstant.email,
-        fullname: asisstant.firstname + ' ' + customer.lastname,
+        fullname: asisstant.firstname + ' ' + asisstant.lastname,
         mobile: asisstant.mobile,
         photo_url: asisstant.photo_url
       }
@@ -44,7 +44,8 @@ export default class OrderTransformer extends TransformerAbstract {
             id: productData.uuid,
             name: productData.name,
             description: productData.description,
-            photo_url: productData.photo_url
+            photo_url: productData.photo_url,
+            price: productData.price
           }
         }
         return {
