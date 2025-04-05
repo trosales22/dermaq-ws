@@ -7,6 +7,7 @@ import { DashboardRoutes } from './DashboardRoutes'
 import { StaffMgmtRoutes } from './StaffMgmtRoutes'
 import { OrderRoutes } from './OrderRoutes'
 import { DatasetsRoutes } from './DatasetsRoutes'
+import { CustomerMgmtRoutes } from './CustomerMgmtRoutes'
 
 export const CoreRoutes = () => [
   Route.group(() => {
@@ -22,6 +23,7 @@ export const CoreRoutes = () => [
     ProductRoutes()
     OrderRoutes()
     StaffMgmtRoutes()
+    CustomerMgmtRoutes()
     DatasetsRoutes()
   }).prefix('core')
 ]

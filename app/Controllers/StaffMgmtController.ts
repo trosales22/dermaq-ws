@@ -1,7 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import JSONSerializerHelper from 'App/Helpers/JSONSerializerHelper'
 import DateFormatterHelper from 'App/Helpers/DateFormatterHelper'
-import Product from 'App/Models/Product'
 import UserRepository from 'App/Repositories/UserRepository'
 import StaffTransformer from 'App/Transformers/StaffTransformer'
 import User from 'App/Models/User'
@@ -43,7 +42,7 @@ export default class StaffMgmtController {
 
     const data = await this.userRepo.getById(params.id)
     const transformed = await transform.item(data, StaffTransformer)
-    const serialized = JSONSerializerHelper.serialize(Product.table, null, transformed)
+    const serialized = JSONSerializerHelper.serialize(User.table, null, transformed)
 
     return response.json(serialized)
   }
