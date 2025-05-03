@@ -40,4 +40,10 @@ export default class FirebaseHelper {
       status: payload.status
     });
   }
+
+  public static async removeQueue(refno: string) {
+    const path = `queues/${refno}`
+    const ref = admin.database().ref(path)
+    return await ref.remove()
+  }
 }

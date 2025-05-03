@@ -49,6 +49,8 @@ export default class ClinicSessionController {
   public async indexNonAuth({ request, response, transform }: HttpContextContract){
     await request.validate(ListClinicSessionRequest)
 
+    await this.clinicSessionRepo.closeOutdatedSessions()
+
     const list = await this.clinicSessionRepo.getAll({
       q: request.input('q', null),
       page: request.input('page', 1),

@@ -3,6 +3,9 @@ import NotFoundException from "App/Exceptions/NotFoundException";
 import DeleteException from "App/Exceptions/DeleteException";
 import UpdateException from "App/Exceptions/UpdateException";
 import ClinicSession from "App/Models/ClinicSession";
+import moment from "moment";
+import GeneralConstants from "App/Constants/GeneralConstants";
+import FirebaseHelper from "App/Helpers/FirebaseHelper";
 
 export default class ClinicSessionRepository {
   constructor() {}
@@ -87,5 +90,28 @@ export default class ClinicSessionRepository {
         throw new DeleteException('clinic session', err.message)
       }
     )
+  }
+
+  async closeOutdatedSessions() {
+    const today = moment().tz('Asia/Manila').format('YYYY-MM-DD')
+
+    try {
+      const sessionsToClose = await ClinicSession.query()
+        .where('session_date', '<', today)
+        .andWhere('status', '!=', GeneralConstants.CLINIC_SESSION_STATUS_CODES.CLOSED)
+
+      for (const session of sessionsToClose) {
+        // Remove Firebase queue node
+        await FirebaseHelper.removeQueue(session.refno)
+
+        // Update session status
+        session.status = GeneralConstants.CLINIC_SESSION_STATUS_CODES.CLOSED
+        await session.save()
+      }
+
+      return sessionsToClose.length
+    } catch (error) {
+      throw new UpdateException('clinic session', error.message)
+    }
   }
 }
